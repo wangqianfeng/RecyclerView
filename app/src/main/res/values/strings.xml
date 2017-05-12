@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RecyclerView_demo</string>
+    <string name="all_secelt">全选</string>
+    <string name="NoAll_secelt">全不选</string>
+</resources>
