@@ -1,4 +1,4 @@
-package com.bwie.recyclerview_demo;
+package com.bwie.recyclerview_demo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +9,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bwie.recyclerview_demo.bean.JsonBean;
+import com.bwie.recyclerview_demo.R;
+import com.squareup.picasso.Picasso;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,17 +28,17 @@ import java.util.Map;
 
 public class MyCheckBoxAdapter extends RecyclerView.Adapter<MyCheckBoxAdapter.MyHolders> implements View.OnClickListener, View.OnLongClickListener {
 
-    private final String[] str;
     private final Context context;
+    private final List<JsonBean.DataBean> list;
     private boolean flag = false;
     private OnItemClickListener mOnItemClickListener;//接口
     private Map<Integer,Boolean> mMap = new HashMap<>();//存储checkbox勾选框状态的集合
     private MyHolders mHolders;
     private Animation mAnimation;
 
-    public MyCheckBoxAdapter(String[] str, Context context) {
-        this.str = str;
+    public MyCheckBoxAdapter(List<JsonBean.DataBean> list, Context context) {
         this.context = context;
+        this.list = list;
         setMap();//初始化checkBox的状态
     }
 
@@ -49,7 +55,11 @@ public class MyCheckBoxAdapter extends RecyclerView.Adapter<MyCheckBoxAdapter.My
 
     @Override
     public void onBindViewHolder(MyHolders holder, final int position) {
-        holder.mTextView.setText(str[position]);
+        holder.mTextView.setText(list.get(position).getGoods_name());
+        Picasso.with(context)
+                .load(list.get(position).getGoods_img())
+                .into(holder.mImageView);
+
         //长按的时候
         if (flag){
             mHolders.mCheckBox.setVisibility(View.VISIBLE);
@@ -80,7 +90,29 @@ public class MyCheckBoxAdapter extends RecyclerView.Adapter<MyCheckBoxAdapter.My
 
     @Override
     public int getItemCount() {
-        return str.length;
+        return list.size();
+    }
+
+    class MyHolders extends RecyclerView.ViewHolder{
+        private View itemView;
+
+        private final TextView mTextView;
+        private final CheckBox mCheckBox;
+        private final ImageView mImageView;
+
+        public MyHolders(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+            mImageView = (ImageView) itemView.findViewById(R.id.image);
+            mTextView = (TextView) itemView.findViewById(R.id.goods_name);
+            mCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+        }
+    }
+
+    public void setMap(){
+        for (int i = 0; i <list.size() ; i++) {
+            mMap.put(i,false);//初始化第一次全部设置为不显示
+        }
     }
 
     @Override
@@ -94,26 +126,6 @@ public class MyCheckBoxAdapter extends RecyclerView.Adapter<MyCheckBoxAdapter.My
     public boolean onLongClick(View view) {
         setMap();//长按的时候清空状态，不管选中与不选中
         return mOnItemClickListener != null &&mOnItemClickListener.setItemLongClickListener(view,(int)view.getTag());
-    }
-
-    class MyHolders extends RecyclerView.ViewHolder{
-        private View itemView;
-
-        private final TextView mTextView;
-        private final CheckBox mCheckBox;
-
-        public MyHolders(View itemView) {
-            super(itemView);
-            this.itemView = itemView;
-            mTextView = (TextView) itemView.findViewById(R.id.text);
-            mCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox);
-        }
-    }
-
-    public void setMap(){
-        for (int i = 0; i <str.length ; i++) {
-            mMap.put(i,false);//初始化第一次全部设置为不显示
-        }
     }
 
     //定义CheckBox的监听接口

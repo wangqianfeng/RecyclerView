@@ -1,4 +1,4 @@
-package com.bwie.recyclerview_demo;
+package com.bwie.recyclerview_demo.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.bwie.recyclerview_demo.R;
 
 /**
  * 用途：
@@ -64,7 +66,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             mTextView = (TextView) view.findViewById(R.id.text);
             mCheckBox = (CheckBox) view.findViewById(R.id.checkbox);
         }
-
     }
     //1、定义一个接口
     public interface OnItemClickListener{
